@@ -26,4 +26,4 @@ ENV DOCKER_GID=998
 COPY ./pre-entry.sh /
 USER jenkins
 
-ENTRYPOINT ["/pre-entry.sh", "${DOCKER_GID}"]
+ENTRYPOINT /pre-entry.sh ${DOCKER_GID}
