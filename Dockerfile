@@ -3,7 +3,7 @@ FROM jenkins/jenkins:latest
 LABEL maintainer="WiiPlayer2"
 
 USER root
-COPY /usr/bin/docker /usr/bin/docker
+# COPY /usr/bin/docker /usr/bin/docker
 RUN apt-get update \
       && apt-get upgrade -y \
       && apt-get install -y sudo libltdl-dev \
