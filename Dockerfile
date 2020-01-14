@@ -22,7 +22,7 @@ RUN apt-get update && \
 
 RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
 
-ARG DOCKER_GID
+ENV DOCKER_GID=998
 COPY ./pre-entry.sh /
 USER jenkins
 
