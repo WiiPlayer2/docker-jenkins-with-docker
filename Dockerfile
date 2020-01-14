@@ -21,6 +21,9 @@ RUN apt-get update && \
     apt-get -y install docker-ce
 
 RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
-RUN usermod -a -G docker jenkins
 
+ARG DOCKER_GID
+COPY ./pre-entry.sh /
 USER jenkins
+
+ENTRYPOINT ["/pre-entry.sh", "${DOCKER_GID}"]
