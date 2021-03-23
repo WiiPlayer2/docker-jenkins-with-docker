@@ -20,10 +20,14 @@ RUN apt-get update && \
     apt-get update && \
     apt-get -y install docker-ce
 
-RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
+#ensures that /var/run/docker.sock exists
+RUN touch /var/run/docker.sock
 
-ENV DOCKER_GID=998
-COPY ./pre-entry.sh /
+#changes the ownership of /var/run/docker.sock
+RUN chown root:docker /var/run/docker.sock
+
+#gives jenkins user permissions to access /var/run/docker.sock
+RUN usermod -a -G docker jenkins
+
 USER jenkins
-
-ENTRYPOINT /pre-entry.sh ${DOCKER_GID}
+ENTRYPOINT "/sbin/tini -- /usr/local/bin/jenkins.sh"
