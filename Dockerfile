@@ -30,4 +30,4 @@ RUN chown root:docker /var/run/docker.sock
 RUN usermod -a -G docker jenkins
 
 USER jenkins
-ENTRYPOINT /sbin/tini -- /usr/local/bin/jenkins.sh
+ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
