@@ -4,8 +4,8 @@ pipeline {
     }
 
     environment {
-        IMAGE = "jenkins-with-docker"
-        REGISTRY = "wiiplayer2"
+        IMAGE = "wiiplayer2/jenkins-with-docker"
+        REGISTRY = "registry.hub.docker.com"
         CREDENTIALS_ID = "docker-hub-registry"
     }
 
