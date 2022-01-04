@@ -3,16 +3,25 @@ pipeline {
         label 'docker'
     }
 
+    environment {
+        IMAGE = "jenkins-with-docker"
+        REGISTRY = "wiiplayer2"
+        CREDENTIALS_ID = "docker-hub-registry"
+    }
+
     stages {
         stage('Build') {
             steps {
-                sh 'docker build -t wiiplayer2/jenkins-with-docker:latest --pull .'
+                sh "docker build -t ${IMAGE}:latest --pull ."
             }
         }
 
         stage('Publish') {
             steps {
-                sh 'docker image push wiiplayer2/jenkins-with-docker:latest'
+                withDockerRegistry([credentialsId: "${CREDENTIALS_ID}", url: "https://${REGISTRY}/"]) {
+                    sh "docker tag ${IMAGE}:latest ${REGISTRY}/${IMAGE}:latest"
+                    sh "docker image push ${REGISTRY}/${IMAGE}:latest"
+                }
             }
         }
     }
