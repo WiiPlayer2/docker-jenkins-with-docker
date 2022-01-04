@@ -20,14 +20,8 @@ RUN apt-get update && \
     apt-get update && \
     apt-get -y install docker-ce
 
-#ensures that /var/run/docker.sock exists
-RUN touch /var/run/docker.sock
+COPY entrypoint.sh /entrypoint.sh
+COPY fix-perms.sh /fix-perms.sh
+COPY run.sh /run.sh
 
-#changes the ownership of /var/run/docker.sock
-RUN chown root:docker /var/run/docker.sock
-
-#gives jenkins user permissions to access /var/run/docker.sock
-RUN usermod -a -G docker jenkins
-
-USER jenkins
-ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
+ENTRYPOINT ["/entrypoint.sh", "/run.sh"]
