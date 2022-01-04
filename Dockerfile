@@ -11,7 +11,8 @@ RUN apt-get update && \
         ca-certificates \
         curl \
         gnupg2 \
-        software-properties-common && \
+        software-properties-common \
+        gosu && \
     curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg > /tmp/dkey; apt-key add /tmp/dkey && \
     add-apt-repository \
     "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
@@ -23,5 +24,6 @@ RUN apt-get update && \
 COPY entrypoint.sh /entrypoint.sh
 COPY fix-perms.sh /fix-perms.sh
 COPY run.sh /run.sh
+RUN usermod -a -G docker jenkins
 
-ENTRYPOINT ["/entrypoint.sh", "/run.sh"]
+ENTRYPOINT ["/entrypoint.sh", "/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
