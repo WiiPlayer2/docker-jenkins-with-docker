@@ -3,6 +3,10 @@ pipeline {
         label 'docker'
     }
 
+    triggers {
+        cron('@weekly')
+    }
+
     environment {
         IMAGE = "wiiplayer2/jenkins-with-docker"
         REGISTRY = "registry.hub.docker.com"
