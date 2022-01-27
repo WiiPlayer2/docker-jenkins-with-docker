@@ -1,32 +1,27 @@
-pipeline {
-    agent {
-        label 'docker'
+node('docker') {
+    checkout scm;
+
+    def dockerBuild = load "ci/dockerBuild.groovy";
+
+    def project = [
+        imageName: 'wiiplayer2/jenkins-with-docker',
+        tag: 'latest',
+        registry: 'registry.hub.docker.com',
+        registryCredentials: 'docker-hub-registry',
+        dockerfile: './Dockerfile',
+    ];
+
+    properties([
+        pipelineTriggers([
+            cron('@weekly')
+        ]),
+    ])
+
+    stage('Build') {
+        dockerBuild.build(project);
     }
 
-    triggers {
-        cron('@weekly')
-    }
-
-    environment {
-        IMAGE = "wiiplayer2/jenkins-with-docker"
-        REGISTRY = "registry.hub.docker.com"
-        CREDENTIALS_ID = "docker-hub-registry"
-    }
-
-    stages {
-        stage('Build') {
-            steps {
-                sh "docker build -t ${IMAGE}:latest --pull ."
-            }
-        }
-
-        stage('Publish') {
-            steps {
-                withDockerRegistry([credentialsId: "${CREDENTIALS_ID}", url: "https://${REGISTRY}/"]) {
-                    sh "docker tag ${IMAGE}:latest ${REGISTRY}/${IMAGE}:latest"
-                    sh "docker image push ${REGISTRY}/${IMAGE}:latest"
-                }
-            }
-        }
+    stage('Publish') {
+        dockerBuild.publish(project);
     }
 }
