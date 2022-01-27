@@ -9,6 +9,10 @@ node('docker') {
         registry: 'registry.hub.docker.com',
         registryCredentials: 'docker-hub-registry',
         dockerfile: './Dockerfile',
+        platforms: [
+            'linux/amd64',
+            'linux/arm64',
+        ],
     ];
 
     properties([
