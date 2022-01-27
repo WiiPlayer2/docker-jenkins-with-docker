@@ -3,7 +3,7 @@ node('docker') {
 
     def dockerBuild = load "ci/dockerBuild.groovy";
 
-    def project = [
+    def project = dockerBuild.prepare([
         imageName: 'wiiplayer2/jenkins-with-docker',
         tag: 'latest',
         registry: 'registry.hub.docker.com',
@@ -13,7 +13,7 @@ node('docker') {
             'linux/amd64',
             'linux/arm64',
         ],
-    ];
+    ]);
 
     properties([
         pipelineTriggers([
@@ -21,11 +21,5 @@ node('docker') {
         ]),
     ])
 
-    stage('Build') {
-        dockerBuild.build(project);
-    }
-
-    stage('Publish') {
-        dockerBuild.publish(project);
-    }
+    dockerBuild.buildAndPublish(project);
 }
