@@ -25,4 +25,4 @@ COPY entrypoint.sh /entrypoint.sh
 COPY fix-perms.sh /fix-perms.sh
 RUN usermod -a -G docker jenkins
 
-ENTRYPOINT ["/entrypoint.sh", "/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
+ENTRYPOINT ["/entrypoint.sh", "/usr/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
